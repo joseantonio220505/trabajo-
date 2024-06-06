@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor Node.js</title>
+</head>
+
+<body>
+
+    <h1>Formulario de Datos </h1>
+    <form id="saludoForm">
+        <label for="nombres">Ingrese usuario:</label><br>
+        <input type="text" id="nombres" name="nombres"><br>
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="respuesta"></div>
+
+    <script>
+        document.getElementById('saludoForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const nombres = document.getElementById('nombres').value;
+            fetch('http://localhost:3000/formulario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `nombre=${nombres}`
+            })
+                .then(response => response.text())
+                .then(data => {
+                    const respuestaDiv = document.getElementById('respuesta');
+                    const saludos = data.split('\n');
+                    saludos.forEach(saludo => {
+                        const p = document.createElement('p');
+                        p.textContent = saludo;
+                        respuestaDiv.appendChild(p);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
